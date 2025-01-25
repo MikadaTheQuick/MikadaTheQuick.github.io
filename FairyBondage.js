@@ -56,8 +56,12 @@ async function LoadFairyBondage() {
         if (args[0] == "ChatRoomChat" && args[1]?.Type == "Action"){ //an action happened in chat
             if (args[1].Dictionary[3]?.Text?.includes(Player.Nickname)){ //action source is Player
                 //all signatures of flying:
-                if ((args[1].Content == "Beep") && (args[1].Dictionary[3].Text.includes("flying"))){ //rough signature of /bcar fly
-                    TryFly(args);
+                if (args[1].Content == "Beep") { //bcar message
+                    if (args[1].Dictionary[3].Text.includes("flying")){ //rough signature of /bcar fly
+                        TryFly(args);
+                    } else if (args[1].Dictionary[3].Text.includes("tail")){ //my guess of a rough signature of bcar tail wagging
+                        TryWagTail(args);
+                    }
                 }
             }
         }
@@ -74,7 +78,9 @@ function GetBindingCrafts() {
     const crafts = Player.Appearance
 
     const tokens = {
-        "bind wings":["binds wings","disables wings","wing binding","bind wing","binds wing","bind wings","(binds wings)"]
+        "bind wings":["binds wings","disables wings","wing binding","bind wing","binds wing","bind wings","(binds wings)"],
+        "bind tail":["binds tail","disables tail","bind tail","tail binding",
+                     "binds the tail","disables the tail","bind the tail",""]
     };
 
     //find keywords (tokens)
@@ -91,7 +97,7 @@ function GetBindingCrafts() {
             if(keylist.length == 0) {
                 continue;
             }
-            crafts[i].Craft.Description = keylist;
+            crafts[i].Craft.bindingAttributes = keylist;
             bindingCrafts[i] = crafts[i];
             delete keylist;
         }
@@ -106,8 +112,15 @@ function GetWingBindingItem(){
     const bindingCrafts = GetBindingCrafts();
     for(let item in bindingCrafts){
         //if(item.Craft?.Description?.includes("bind wings")){return item}
-        if(bindingCrafts[item].Craft?.Description?.includes("bind wings")){return bindingCrafts[item];}
+        if(bindingCrafts[item].Craft?.bindingAttributes?.includes("bind wings")){return bindingCrafts[item];}
+    }
+}
 
+function GetTailBindingItem(){
+    const bindingCrafts = GetBindingCrafts();
+    for(let item in bindingCrafts){
+        //if(item.Craft?.Description?.includes("bind wings")){return item}
+        if(bindingCrafts[item].Craft?.bindingAttributes?.includes("bind tail")){return bindingCrafts[item];}
     }
 }
 
@@ -121,9 +134,23 @@ function TryFly(args) {
             wingBindItem.Asset.Description +
             ".";
         if (InventoryGet(Player, 'Emoticon')?.Property) {
-        delete InventoryGet(Player, 'Emoticon')?.Property.OverrideHeight;
-        CurrentScreen === 'ChatRoom' ? ChatRoomCharacterUpdate(Player) : CharacterRefresh(Player);
+            delete InventoryGet(Player, 'Emoticon')?.Property.OverrideHeight;
+            CurrentScreen === 'ChatRoom' ? ChatRoomCharacterUpdate(Player) : CharacterRefresh(Player);
         }
+    }
+    return false;
+}
+
+function TryWagTail(args) {
+    const tailBindItem = GetTailBindingItem();
+    console.info(tailBindItem);
+    if (tailBindItem) {
+        args[1].Dictionary[3].Text =
+            CharacterNickname(Player) +
+            "'s tail struggle against the " +
+            tailBindItem.Asset.Description +
+            ".";
+        //stop tail wagging somehow?
     }
     return false;
 }
