@@ -126,12 +126,12 @@ function GetTailBindingItem(){
 
 function TryFly(args) {
     const wingBindItem = GetWingBindingItem();
-    console.info(wingBindItem);
+    //console.info(wingBindItem);
     if (wingBindItem) {
         args[1].Dictionary[3].Text =
             CharacterNickname(Player) +
             "'s wings struggle against the " +
-            wingBindItem.Asset.Description +
+            wingBindItem.Craft.Name +
             ".";
         if (InventoryGet(Player, 'Emoticon')?.Property) {
             delete InventoryGet(Player, 'Emoticon')?.Property.OverrideHeight;
@@ -143,12 +143,12 @@ function TryFly(args) {
 
 function TryWagTail(args) {
     const tailBindItem = GetTailBindingItem();
-    console.info(tailBindItem);
+    //console.info(tailBindItem);
     if (tailBindItem) {
         args[1].Dictionary[3].Text =
             CharacterNickname(Player) +
             "'s tail struggles against the " +
-            tailBindItem.Asset.Description +
+            tailBindItem.Craft.Name +
             ".";
         //stop tail wagging somehow?
     }
