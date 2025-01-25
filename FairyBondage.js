@@ -80,7 +80,7 @@ function GetBindingCrafts() {
     const tokens = {
         "bind wings":["binds wings","disables wings","wing binding","bind wing","binds wing","bind wings","(binds wings)"],
         "bind tail":["binds tail","disables tail","bind tail","tail binding",
-                     "binds the tail","disables the tail","bind the tail",""]
+                     "binds the tail","disables the tail","bind the tail"]
     };
 
     //find keywords (tokens)
@@ -147,7 +147,7 @@ function TryWagTail(args) {
     if (tailBindItem) {
         args[1].Dictionary[3].Text =
             CharacterNickname(Player) +
-            "'s tail struggle against the " +
+            "'s tail struggles against the " +
             tailBindItem.Asset.Description +
             ".";
         //stop tail wagging somehow?
